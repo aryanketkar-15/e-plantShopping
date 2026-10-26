@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, selectCartItems, selectCartCount } from './CartSlice.jsx';
 
@@ -32,9 +33,9 @@ const categories = ['All plants', ...categoryNames];
 export function Navbar() {
   const count = useSelector(selectCartCount);
   return <header className="navbar">
-    <a href="/" className="brand"><span className="brand-mark">✿</span><span>paradise<span className="brand-light">nursery</span></span></a>
-    <nav><a href="/">Home</a><a href="/plants">Plants</a><a href="/cart">Cart</a></nav>
-    <a className="cart-link" href="/cart" aria-label={`Shopping cart with ${count} items`}><span>♧</span> Cart <b>{count}</b></a>
+    <Link to="/" className="brand"><span className="brand-mark">✿</span><span>paradise<span className="brand-light">nursery</span></span></Link>
+    <nav><NavLink to="/">Home</NavLink><NavLink to="/plants">Plants</NavLink><NavLink to="/cart">Cart</NavLink></nav>
+    <Link className="cart-link" to="/cart" aria-label={`Shopping cart with ${count} items`}><span>♧</span> Cart <b>{count}</b></Link>
   </header>;
 }
 
