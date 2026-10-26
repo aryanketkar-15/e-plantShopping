@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, selectCartItems } from './CartSlice.jsx';
+import { addItem, selectCartItems } from './CartSlice.jsx';
 
 const plants = [
   { id: 1, name: 'Monstera Deliciosa', category: 'Statement plants', price: 34, tag: 'BESTSELLER', description: 'Big, beautiful leaves that make a statement.', image: 'photo-1614594975525-e45190c55d0b' },
@@ -30,18 +30,24 @@ export default function ProductList() {
   const [active, setActive] = useState('All plants');
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
-  const visible = plants.filter(plant => active === 'All plants' || plant.category === active);
+  const addedToCart = Object.fromEntries(cartItems.map(item => [item.name, true]));
+  const visibleCategories = active === 'All plants' ? ['Statement plants', 'Easy care', 'Trailing plants'] : [active];
   return <main className="shop-page">
     <div className="shop-heading"><span className="eyebrow green">THE PLANT EDIT</span><h1>Find your <em>green.</em></h1><p>Good plants. Good energy. Better spaces.</p></div>
     <div className="category-tabs">{categories.map(category => <button key={category} className={active === category ? 'active' : ''} onClick={() => setActive(category)}>{category}</button>)}</div>
-    <div className="results-line"><span>{visible.length} plants to love</span><span>Chosen for your home ✳</span></div>
-    <div className="plant-grid">{visible.map(plant => {
-      const inCart = cartItems.some(item => item.id === plant.id);
-      return <article className="plant-card" key={plant.id}>
-        <div className="plant-photo"><img src={imageUrl(plant.image)} alt={plant.name} loading="lazy"/>{plant.tag && <span className="plant-tag">{plant.tag}</span>}<span className="photo-number">0{plant.id}</span></div>
-        <div className="plant-info"><span className="plant-category">{plant.category}</span><div className="plant-title-row"><h3>{plant.name}</h3><strong>${plant.price}</strong></div><p>{plant.description}</p><button className={inCart ? 'add-button added' : 'add-button'} onClick={() => dispatch(addToCart(plant))}>{inCart ? 'Add another +' : '＋ Add to cart'}</button></div>
-      </article>;
-    })}</div>
+    <div className="results-line"><span>{visibleCategories.reduce((sum, category) => sum + plants.filter(plant => plant.category === category).length, 0)} plants to love</span><span>Chosen for your home ✳</span></div>
+    {visibleCategories.map(category => {
+      const categoryPlants = plants.filter(plant => plant.category === category);
+      return <section className="product-category-section" key={category}>
+        <h2>{category}</h2>
+        <div className="product-list">{categoryPlants.map(plant => (
+          <article className="plant-card" key={plant.id}>
+            <div className="plant-photo"><img src={imageUrl(plant.image)} alt={plant.name} loading="lazy"/>{plant.tag && <span className="plant-tag">{plant.tag}</span>}<span className="photo-number">0{plant.id}</span></div>
+            <div className="plant-info"><span className="plant-category">{plant.category}</span><div className="plant-title-row"><h3>{plant.name}</h3><strong>${plant.price}</strong></div><p>{plant.description}</p><button className="add-button" disabled={Boolean(addedToCart[plant.name])} onClick={() => dispatch(addItem(plant))}>{addedToCart[plant.name] ? 'Added to Cart ✓' : 'Add to Cart'}</button></div>
+          </article>
+        ))}</div>
+      </section>;
+    })}
     <p className="shop-footnote">A little care goes a long way. Every plant comes with simple care guidance.</p>
   </main>;
 }
