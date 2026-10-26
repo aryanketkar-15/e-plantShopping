@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, selectCartItems } from './CartSlice.jsx';
+import { addItem, selectCartItems, selectCartCount } from './CartSlice.jsx';
 
 const plants = [
   { id: 1, name: 'Monstera Deliciosa', category: 'Statement plants', price: 34, tag: 'BESTSELLER', description: 'Big, beautiful leaves that make a statement.', image: 'photo-1614594975525-e45190c55d0b' },
@@ -23,7 +23,21 @@ const plants = [
   { id: 18, name: 'Scindapsus Pictus', category: 'Trailing plants', price: 20, tag: '', description: 'Velvety leaves sprinkled with silver.', image: 'photo-1616763355548-1b606f439f86' }
 ];
 
-const categories = ['All plants', 'Statement plants', 'Easy care', 'Trailing plants'];
+const categoryNames = ['Statement plants', 'Easy care', 'Trailing plants'];
+const plantsArray = Object.fromEntries(categoryNames.map(category => [
+  category,
+  { category, plants: plants.filter(plant => plant.category === category) }
+]));
+const categories = ['All plants', ...categoryNames];
+export function Navbar() {
+  const count = useSelector(selectCartCount);
+  return <header className="navbar">
+    <a href="/" className="brand"><span className="brand-mark">✿</span><span>paradise<span className="brand-light">nursery</span></span></a>
+    <nav><a href="/">Home</a><a href="/plants">Plants</a><a href="/cart">Cart</a></nav>
+    <a className="cart-link" href="/cart" aria-label={`Shopping cart with ${count} items`}><span>♧</span> Cart <b>{count}</b></a>
+  </header>;
+}
+
 const imageUrl = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=700&q=80`;
 
 export default function ProductList() {
@@ -37,13 +51,13 @@ export default function ProductList() {
     <div className="category-tabs">{categories.map(category => <button key={category} className={active === category ? 'active' : ''} onClick={() => setActive(category)}>{category}</button>)}</div>
     <div className="results-line"><span>{visibleCategories.reduce((sum, category) => sum + plants.filter(plant => plant.category === category).length, 0)} plants to love</span><span>Chosen for your home ✳</span></div>
     {visibleCategories.map(category => {
-      const categoryPlants = plants.filter(plant => plant.category === category);
+      const categoryPlants = plantsArray[category].plants;
       return <section className="product-category-section" key={category}>
         <h2>{category}</h2>
         <div className="product-list">{categoryPlants.map(plant => (
           <article className="plant-card" key={plant.id}>
             <div className="plant-photo"><img src={imageUrl(plant.image)} alt={plant.name} loading="lazy"/>{plant.tag && <span className="plant-tag">{plant.tag}</span>}<span className="photo-number">0{plant.id}</span></div>
-            <div className="plant-info"><span className="plant-category">{plant.category}</span><div className="plant-title-row"><h3>{plant.name}</h3><strong>${plant.price}</strong></div><p>{plant.description}</p><button className="add-button" disabled={Boolean(addedToCart[plant.name])} onClick={() => dispatch(addItem(plant))}>{addedToCart[plant.name] ? 'Added to Cart ✓' : 'Add to Cart'}</button></div>
+            <div className="plant-info"><span className="plant-category">{plant.category}</span><div className="plant-title-row"><h3>{plant.name}</h3><strong>${plant.price}</strong></div><p>{plant.description}</p><button className="add-button" disabled={Boolean(addedToCart[plant.name])} onClick={() => dispatch(addItem({ ...plant, cost: plant.cost ?? plant.price }))}>{addedToCart[plant.name] ? 'Added to Cart ✓' : 'Add to Cart'}</button></div>
           </article>
         ))}</div>
       </section>;
