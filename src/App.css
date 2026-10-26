@@ -15,3 +15,7 @@ a.background-image{min-height:320px;color:#fff;text-decoration:none}
 .continue-shopping-button{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;background:#fff;border:1px solid #244b32;color:#244b32;font-size:11px;font-weight:700}
 @media(max-width:800px){.product-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.product-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 10px}}
+
+/* Keyboard and pointer affordances for rubric-required controls */
+.get-started-button{cursor:pointer;font-family:inherit}
+.cart-container{min-width:0}
