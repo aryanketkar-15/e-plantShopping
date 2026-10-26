@@ -1,29 +1,22 @@
-import { Link, NavLink, Route, Routes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectCartCount } from './CartSlice.jsx';
-import ProductList from './ProductList.jsx';
+import { Link, Route, Routes } from 'react-router-dom';
+import { useState } from 'react';
+import ProductList, { Navbar } from './ProductList.jsx';
 import CartItem from './CartItem.jsx';
 import AboutUs from './AboutUs.jsx';
 import './App.css';
 
-function Navbar() {
-  const count = useSelector(selectCartCount);
-  return <header className="navbar">
-    <Link to="/" className="brand"><span className="brand-mark">✿</span><span>paradise<span className="brand-light">nursery</span></span></Link>
-    <nav><NavLink to="/">Home</NavLink><NavLink to="/plants">Plants</NavLink><NavLink to="/cart">Cart</NavLink><NavLink to="/about">About Us</NavLink></nav>
-    <Link className="cart-link" to="/cart" aria-label={`Shopping cart with ${count} items`}><span>♧</span> Cart <b>{count}</b></Link>
-  </header>;
-}
-
 function Home() {
-  return <main>
+  const [showProductList, setShowProductList] = useState(false);
+  const handleGetStartedClick = () => setShowProductList(true);
+  if (showProductList) return <ProductList />;
+  return <main className="app-container">
     <section className="hero background-image">
       <div className="hero-overlay" />
       <div className="hero-content">
         <span className="eyebrow">A LITTLE GREEN GOES A LONG WAY</span>
         <h1>Welcome to Paradise Nursery</h1>
         <p>Thoughtfully chosen plants to make your space feel more like you. Start your little indoor jungle here.</p>
-        <Link to="/plants" className="button button-light">Get Started <span>↗</span></Link>
+        <button type="button" className="button button-light get-started-button" onClick={handleGetStartedClick}>Get Started <span>↗</span></button>
         <div className="hero-note"><span>✳</span> Plants for happier homes</div>
       </div>
       <div className="hero-caption">GROW AT YOUR OWN PACE — EST. WITH LOVE</div>
