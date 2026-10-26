@@ -1,13 +1,16 @@
-# Paradise Nursery 🌿
+# e-plantShopping — Paradise Nursery 🌿
 
-A responsive plant-shop shopping cart application built with React, Vite, Redux Toolkit, and React Router.
+A responsive plant shopping application built with React, Vite, Redux Toolkit, and React Router.
+
+## Project name
+**e-plantShopping (Paradise Nursery)**
 
 ## Features
-- Browse indoor plants by category
-- Plant cards with descriptions, prices, and imagery
-- Add plants to a Redux-powered cart
-- Increase/decrease quantities and remove items
-- Live cart totals and item count
+- Landing page with a background image and Get Started navigation
+- Home, Plants, About Us, and Cart navigation
+- Three plant categories with six or more plants per category
+- Plant thumbnails, names, prices, and Add to Cart controls
+- Redux-powered cart quantity, item removal, and live totals
 - Responsive layout for desktop and mobile
 
 ## Run locally
@@ -16,7 +19,7 @@ npm install
 npm run dev
 ```
 
-## Build
+## Production build
 ```bash
 npm run build
 npm run preview
